@@ -1,0 +1,15 @@
+# Python dependencies for investigation scripts.
+#
+# No third-party dependencies are currently declared.
+# The actual script source files must be reviewed before adding packages.
+#
+# Python standard-library modules do not need to be listed here.
+#
+# When a script introduces a third-party dependency:
+# 1. Confirm that the script imports and uses the package.
+# 2. Test the required package version.
+# 3. Pin the version when reproducibility requires it.
+# 4. Document the dependency in scripts/README.md.
+#
+# Example format (do not uncomment without verifying actual usage):
+# package-name==1.2.3
