@@ -1,215 +1,291 @@
 # Investigation Scripts
 
-## 1. Purpose
+## 1. Overview
 
-This directory is intended to contain supporting scripts used during the examination, validation, and documentation of the Android APK investigation.
+This directory contains Python utilities supporting the static examination and documentation of the Android APK investigation.
 
-Scripts included in this directory should improve reproducibility by automating repeatable examination tasks and reducing manual errors.
+The scripts provide repeatable operations for:
 
-The scripts are intended to support the investigation's static-analysis and infrastructure-documentation scope.
+- Evidence integrity verification.
+- APK metadata and archive inspection.
+- IOC validation.
+- Offline DNS dataset analysis.
+- Certificate-transparency dataset analysis.
 
-They must not be presented as proof of runtime behaviour unless their output is supported by independently collected evidence.
+The utilities are designed to support reproducibility and evidence handling. They do not execute the examined APK or establish runtime behaviour.
 
-## 2. Current Status
+## 2. Script Inventory
 
-The repository currently defines the scripts directory and its dependency manifest.
+| Script | Purpose | Input | Output |
+|---|---|---|---|
+| `sha256_manifest.py` | Calculate SHA-256 hashes | File or directory | CSV manifest |
+| `apk_metadata.py` | Inspect APK metadata and archive structure | APK file | JSON report or terminal output |
+| `validate_iocs.py` | Validate IOC JSON and CSV files | JSON, CSV or directory | Validation summary |
+| `dns_analysis.py` | Summarise DNS observations | Structured JSON | JSON report or terminal output |
+| `certificate_analysis.py` | Analyse certificate records and issuance intervals | Structured JSON | JSON report or terminal output |
 
-| Item | Status |
+## 3. Requirements
+
+- Python 3.9 or later.
+- Python standard library.
+- Optional Android SDK command-line tools for extended APK metadata inspection.
+
+### Optional Android tools
+
+| Tool | Purpose |
 |---|---|
-| Script documentation | Available |
-| Python dependency manifest | Available |
-| Analysis script inventory | Pending source-file verification |
-| Automated test suite | Not established |
-| Runtime-analysis automation | Outside investigation scope |
+| `aapt` / `aapt2` | APK package and SDK metadata |
+| `apksigner` | Signing-certificate verification |
 
-No specific executable script is claimed to be included until its source code and purpose are documented.
+These tools are not Python dependencies.
 
-## 3. Recommended Directory Structure
+No third-party Python packages are currently required.
 
-As scripts are added, use a structure similar to:
+## 4. Usage
 
-```text
-scripts/
-├── README.md
-├── requirements.txt
-├── hashing/
-│   └── sha256_manifest.py
-├── metadata/
-│   └── apk_metadata.py
-├── validation/
-│   ├── validate_iocs.py
-│   └── validate_json.py
-└── tests/
-    └── README.md
+Run the scripts from the repository root.
+
+### 4.1 SHA-256 evidence manifest
+
+Calculate hashes for a directory:
+
+```bash
+python scripts/sha256_manifest.py ./evidence \
+    --output ./reports/evidence-manifest.csv
 ```
 
-This is a proposed structure, not a representation of files already present in the repository.
+Calculate the hash of a single APK:
 
-## 4. Recommended Script Categories
+```bash
+python scripts/sha256_manifest.py ./sample.apk \
+    --output ./reports/apk-manifest.csv
+```
 
-### 4.1 Evidence integrity
+The output includes:
 
-Potential responsibilities:
+- Relative file path.
+- File size in bytes.
+- SHA-256 digest.
+- Processing status.
+- Error information.
+- UTC collection timestamp.
 
-- Calculate SHA-256 hashes.
-- Generate file-integrity manifests.
-- Compare original and working-copy hashes.
-- Validate evidence filenames and metadata.
+Existing output files are protected by default. Use `--force` only when intentionally replacing an existing manifest.
 
-### 4.2 APK metadata
+### 4.2 APK metadata inspection
 
-Potential responsibilities:
+Inspect an APK:
 
-- Extract APK package information.
-- Record version and SDK attributes.
-- Collect signing-certificate metadata.
-- Generate structured metadata output.
+```bash
+python scripts/apk_metadata.py ./sample.apk
+```
+
+Save the report:
+
+```bash
+python scripts/apk_metadata.py ./sample.apk \
+    --output ./reports/apk-metadata.json
+```
+
+The script examines:
+
+- APK SHA-256.
+- ZIP archive integrity.
+- Archive entry count.
+- Uncompressed archive size.
+- DEX files.
+- Native libraries.
+- Manifest presence.
+- Signing-related archive files.
+- Unusual archive entry paths.
+- Optional package metadata.
+- Optional signing verification.
+
+The script does not install or execute the APK.
 
 ### 4.3 IOC validation
 
-Potential responsibilities:
-
-- Validate JSON syntax.
-- Check CSV structure.
-- Identify missing indicator fields.
-- Detect duplicate indicators.
-- Validate SHA-256 formatting.
-
-### 4.4 Report support
-
-Potential responsibilities:
-
-- Generate consistent evidence tables.
-- Validate report references.
-- Check that documented indicators match the IOC catalogue.
-- Produce reproducible summary information.
-
-These are suggested automation categories. They should only be described as implemented after the corresponding scripts are added and tested.
-
-## 5. Environment Setup
-
-Use a dedicated Python virtual environment when third-party packages are required.
-
-### Linux / Kali Linux
+Validate the repository IOC directory:
 
 ```bash
-python3 --version
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
+python scripts/validate_iocs.py ./iocs/
 ```
 
-### Windows
-
-```powershell
-py --version
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-```
-
-Install dependencies only after confirming that the scripts require them:
+Validate individual files:
 
 ```bash
-python -m pip install -r requirements.txt
+python scripts/validate_iocs.py \
+    ./iocs/hashes.json \
+    ./iocs/domains.json \
+    ./iocs/indicators.csv
 ```
 
-## 6. Script Documentation Standard
+Validation includes:
 
-Every executable script added to this repository should document:
+- JSON parsing.
+- CSV parsing.
+- Expected IOC CSV column checks.
+- SHA-256 format checks where fields identify hashes.
+- Empty indicator detection.
+- Duplicate indicator warnings.
 
-| Field | Description |
-|---|---|
-| Script name | Filename |
-| Purpose | What the script does |
-| Input | Accepted files or arguments |
-| Output | Generated files or terminal output |
-| Dependencies | Required Python packages |
-| Execution | Example command |
-| Limitations | Known constraints |
-| Validation | How its output was tested |
+The validator performs local checks only. It does not query VirusTotal, MalwareBazaar, DNS services, or external threat-intelligence platforms.
 
-### Example documentation format
+### 4.4 Offline DNS analysis
 
-```markdown
-## Script: example.py
+Expected input example:
 
-**Purpose:** Describe the actual implemented functionality.
+```json
+{
+    "records": [
+        {
+            "name": "example.com",
+            "type": "A",
+            "value": "192.0.2.10",
+            "ttl": 300,
+            "source": "previously-collected-dataset"
+        },
+        {
+            "name": "example.com",
+            "type": "AAAA",
+            "value": "2001:db8::10"
+        }
+    ]
+}
+```
 
-**Input:** Document accepted input files.
-
-**Output:** Document generated output.
-
-**Dependencies:** List confirmed dependencies.
-
-**Execution:**
+Run the analysis:
 
 ```bash
-python example.py --help
+python scripts/dns_analysis.py ./evidence/dns-records.json
 ```
 
-**Limitations:** Document known limitations.
+Save the summary:
+
+```bash
+python scripts/dns_analysis.py ./evidence/dns-records.json \
+    --output ./reports/dns-summary.json
 ```
 
-The example above is a documentation template, not an implemented script.
+The script summarises record types, unique domains, and observed values.
 
-## 7. Evidence Safety Requirements
+It does not perform DNS lookups.
 
-Scripts that handle investigative artifacts should follow these requirements:
+### 4.5 Certificate timeline analysis
 
-1. Never modify original evidence by default.
-2. Prefer read-only input handling.
-3. Generate derived outputs in a separate directory.
-4. Record SHA-256 hashes where integrity verification is relevant.
-5. Avoid overwriting existing evidence or reports.
-6. Do not print sensitive personal information unnecessarily.
-7. Redact personal data before generating public reports.
-8. Record errors instead of silently ignoring them.
-9. Clearly distinguish generated output from original evidence.
-10. Do not execute suspicious APKs as part of static-analysis scripts.
+Expected input example:
+
+```json
+{
+    "certificates": [
+        {
+            "id": "certificate-001",
+            "dns_names": [
+                "example.com"
+            ],
+            "not_before": "2026-09-01T00:00:00Z",
+            "not_after": "2026-11-30T00:00:00Z",
+            "revoked": false,
+            "pubkey_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "cert_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+    ]
+}
+```
+
+Run the analysis:
+
+```bash
+python scripts/certificate_analysis.py \
+    ./evidence/certificate-records.json
+```
+
+Save the output:
+
+```bash
+python scripts/certificate_analysis.py \
+    ./evidence/certificate-records.json \
+    --output ./reports/certificate-summary.json
+```
+
+The script calculates:
+
+- Certificate record count.
+- Unique certificate identifiers.
+- Unique DNS names.
+- Repeated DNS names.
+- Public-key fingerprint diversity.
+- Issuance intervals for repeated names.
+
+It does not contact certificate-transparency services.
+
+**Input compatibility note:** The example formats above describe the currently supported normalized JSON structures. Raw DNS or Cert Spotter exports may need preprocessing before they can be analysed correctly. The example datasets are illustrative and are not investigation evidence.
+
+## 5. Output and Evidence Handling
+
+The scripts should be used with preserved original evidence and separate working copies.
+
+Recommended practices:
+
+1. Preserve original APKs and evidence files.
+2. Calculate hashes before examination.
+3. Keep generated manifests and reports separate from source evidence.
+4. Avoid overwriting existing evidence outputs.
+5. Record tool versions and execution parameters.
+6. Review errors and warnings rather than ignoring them.
+7. Redact sensitive personal information before publishing outputs.
+
+Generated reports are derived artifacts. They should not replace the original evidence or its acquisition records.
+
+## 6. Investigation Scope
+
+These scripts support the documented static-analysis and offline infrastructure-intelligence scope.
+
+They do not perform:
+
+- APK dynamic execution.
+- Live C2 communication.
+- Remote command execution.
+- SMS transmission.
+- USSD execution.
+- Call-forwarding modification.
+- Active infrastructure exploitation.
+- Automated attribution of infrastructure operators.
+
+## 7. Limitations
+
+Automated output must be interpreted in context.
+
+In particular:
+
+- A matching SHA-256 hash supports file-integrity comparison but does not establish acquisition provenance.
+- APK metadata does not establish application behaviour.
+- Archive path anomalies do not independently prove exploitation or malicious intent.
+- IOC syntax validation does not establish that an indicator is malicious.
+- DNS records do not independently identify backend origin infrastructure.
+- Certificate renewal intervals do not establish common ownership.
+- Static configuration does not prove successful runtime communication.
 
 ## 8. Reproducibility
 
-For each script execution, document:
+For reproducible results, document:
 
-- Script version or Git commit.
 - Python version.
-- Operating system.
-- Input artifact hash.
-- Command-line arguments.
-- Execution timestamp, where relevant.
-- Output file names.
-- Errors or warnings.
+- Script filename.
+- Input filename and SHA-256.
+- Execution command.
+- Output filename.
+- Execution timestamp.
+- Errors and warnings.
 
-This information helps another analyst understand how a result was produced.
+The generated output should be reviewed before being incorporated into the final investigation report.
 
-## 9. Scope Restrictions
+## 9. Development Status
 
-The investigation documented in this repository is based on static APK examination and passive infrastructure intelligence.
+The scripts are repository-support utilities. Their presence does not imply that every utility was used during the original examination.
 
-Scripts should not silently introduce:
+Before treating a script's output as an original investigation result, validate it against the corresponding source evidence and documented collection records.
 
-- APK execution.
-- Live command-and-control interaction.
-- Unauthorised endpoint requests.
-- SMS transmission.
-- USSD execution.
-- Call-forwarding changes.
-- Destructive device operations.
+**Investigation approach:** Static APK examination and offline infrastructure analysis.
 
-Any future dynamic-analysis tooling should be separately scoped, isolated, and documented.
-
-## 10. Contribution Guidelines
-
-Before adding a script:
-
-1. Define its investigative purpose.
-2. Identify its input and output.
-3. Confirm that it does not alter original evidence.
-4. Document dependencies.
-5. Add usage instructions.
-6. Test it with known inputs.
-7. Record limitations.
-8. Update this README.
-
-**Principle:** Every automated result should be traceable, reproducible, and independently interpretable.
+**Execution policy:** No suspicious APK execution or active C2 interaction.
