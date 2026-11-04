@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "investigation": "Android APK and C2 Infrastructure Investigation",
+  "classification": "Highly suspicious Android application",
+  "attribution": "Undetermined",
+  "artifacts": [
+    {
+      "id": "APK-001",
+      "type": "android_apk",
+      "role": "primary",
+      "filename": "primary.apk",
+      "application_label": "HDFC BANK LOAN SERVICE",
+      "package_name": "com.sec.android.app.finance.kaxqj68",
+      "version": "2.9.65",
+      "sha256": "08cfe1f957d7539320eaaa97f1d6838182f5df57e6f875d00dc3060e432d35af",
+      "confidence": "high",
+      "evidence_source": "analysis/apk-metadata.md",
+      "description": "Primary Android application examined during the investigation."
+    },
+    {
+      "id": "APK-002",
+      "type": "android_apk",
+      "role": "embedded",
+      "filename": "rmtley9lr.db (decoded APK)",
+      "application_label": null,
+      "package_name": "com.nxtwave.support",
+      "version": "1.0",
+      "sha256": "13f93b8c70881f9414944fdc55811bfc627dbec966f023c664eb98782690cb4c",
+      "confidence": "high",
+      "evidence_source": "analysis/apk-metadata.md",
+      "description": "Secondary APK recovered from a repeating-XOR-protected asset inside the primary APK."
+    }
+  ],
+  "certificates": [
+    {
+      "id": "CERT-001",
+      "type": "apk_signing_certificate",
+      "subject": "CN=editor",
+      "key_algorithm": "RSA",
+      "key_size": 2048,
+      "sha256": "6215f00baa4bf18bab5792fc796bfc5555917240f14f7c7e672d956888d75c96",
+      "associated_artifacts": [
+        "APK-001",
+        "APK-002"
+      ],
+      "confidence": "high",
+      "evidence_source": "analysis/apk-metadata.md",
+      "description": "Signing certificate fingerprint shared by the primary and embedded APK artifacts."
+    }
+  ],
+  "notes": [
+    "APK SHA-256 values identify complete APK artifacts.",
+    "Certificate SHA-256 identifies the signing certificate and is not an APK file hash.",
+    "The shared signing certificate does not establish common source code, publisher identity, or execution linkage.",
+    "All values should be independently verified against preserved original artifacts before operational use."
+  ]
+}

@@ -1,1 +1,39 @@
-indicator_id,indicator_type,indicator,context,source,first_observed_utc,last_observed_utc,confidence,classification,sensitivity,verification_status,notes
+indicator_id,type,value,role,classification,associated_artifact,confidence,evidence_source,notes
+HASH-001,SHA256,08cfe1f957d7539320eaaa97f1d6838182f5df57e6f875d00dc3060e432d35af,Primary APK hash,artifact_indicator,com.sec.android.app.finance.kaxqj68,High,analysis/apk-metadata.md,Identifies the primary APK
+HASH-002,SHA256,13f93b8c70881f9414944fdc55811bfc627dbec966f023c664eb98782690cb4c,Embedded APK hash,artifact_indicator,com.nxtwave.support,High,analysis/apk-metadata.md,Identifies the decoded embedded APK
+CERT-001,CERT_SHA256,6215f00baa4bf18bab5792fc796bfc5555917240f14f7c7e672d956888d75c96,APK signing certificate,artifact_indicator,Primary and embedded APK,High,analysis/apk-metadata.md,Shared certificate fingerprint; publisher identity not established
+DOMAIN-001,DOMAIN,kinginfo.online,Primary configured infrastructure domain,configured_infrastructure,Android application,High,infrastructure/domain-intelligence.md,Domain ownership and operator attribution undetermined
+DOMAIN-002,DOMAIN,w60.kinginfo.online,Application service hostname,configured_infrastructure,Android application,High,server.json,Referenced by multiple application endpoints
+DOMAIN-003,DOMAIN,host.kinginfo.online,Configuration service hostname,configured_infrastructure,Android application,High,web_server.json,Referenced for configuration retrieval
+DOMAIN-004,DOMAIN,mrkinginfoback.online,Secondary configured domain,configured_infrastructure,Android application,High,server.json,Ownership and operator attribution undetermined
+DOMAIN-005,DOMAIN,w60.mrkinginfoback.online,Call forwarding update hostname,configured_infrastructure,Android application,High,server.json,DNS resolution failed during recorded assessment
+URL-001,URL,https://w60.kinginfo.online/background_service.php,Device status reporting,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-002,URL,https://w60.kinginfo.online/sms_forward.php,SMS forwarding,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-003,URL,https://w60.kinginfo.online/sms_forward_number.php,SMS forwarding configuration,configured_endpoint,Android application,High,server.json,Returned forwarding configuration; telephone number redacted
+URL-004,URL,https://w60.kinginfo.online/call_forward.php,Call forwarding operation,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-005,URL,https://w60.kinginfo.online/call_forward_setting.php,Call forwarding configuration,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-006,URL,https://w60.kinginfo.online/sms_send.php,Remote SMS transmission,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-007,URL,https://w60.kinginfo.online/app_upload.php,Application upload functionality,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-008,URL,https://w60.kinginfo.online/permission.php,Permission configuration,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-009,URL,https://w60.kinginfo.online/save_token.php,FCM token registration,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-010,URL,https://w60.kinginfo.online/web/api/check_online.php,Online status checking,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-011,URL,https://w60.kinginfo.online/ussd_setting.php,USSD configuration,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-012,URL,https://w60.kinginfo.online/update_ussd.php,USSD status reporting,configured_endpoint,Android application,High,server.json,Configured endpoint
+URL-013,URL,https://w60.mrkinginfoback.online/update_call_forward.php,Call forwarding status update,configured_endpoint,Android application,High,server.json,DNS resolution error during recorded assessment
+URL-014,URL,https://host.kinginfo.online/get.php,Web configuration retrieval,configured_endpoint,Android application,High,web_server.json,Configured endpoint
+PACKAGE,ANDROID_PACKAGE,com.sec.android.app.finance.kaxqj68,Primary application package,application_identifier,Primary APK,High,analysis/apk-metadata.md,Package identifier
+PACKAGE,ANDROID_PACKAGE,com.nxtwave.support,Embedded application package,application_identifier,Embedded APK,High,analysis/apk-metadata.md,Package identifier
+FIREBASE-001,FIREBASE_PROJECT_ID,fcmtoken-af5a6,FCM project identifier,application_identifier,Android application,High,infrastructure/firebase-analysis.md,Recovered Firebase configuration
+FIREBASE-002,FIREBASE_SENDER_ID,705898731,FCM sender identifier,application_identifier,Android application,High,infrastructure/firebase-analysis.md,Recovered Firebase configuration
+FIREBASE-003,FIREBASE_APP_ID,1:705898731153:web:130e5565c49b143bfb9130,Firebase application identifier,application_identifier,Android application,High,infrastructure/firebase-analysis.md,Recovered Firebase configuration
+TLS-001,CERTIFICATE_ID,17436230060,w60.kinginfo.online certificate record,certificate_context,w60.kinginfo.online,High,infrastructure/tls-analysis.md,Cert Spotter record identifier
+TLS-002,CERT_SHA256,63d72c5c9a96756ef7d88f6c2965d2b6962ab744dbae983159eafb1808b39321,w60.kinginfo.online certificate fingerprint,certificate_context,w60.kinginfo.online,High,infrastructure/tls-analysis.md,Certificate fingerprint; not an APK hash
+TLS-003,PUBLIC_KEY_SHA256,78439e520243b864cc5e082ed503d61fdbdbf67358b764c1f505e538d441a3ca,w60.kinginfo.online public key fingerprint,certificate_context,w60.kinginfo.online,High,infrastructure/tls-analysis.md,Certificate public-key fingerprint
+TLS-004,CERTIFICATE_ID,16807392801,host.kinginfo.online certificate record,certificate_context,host.kinginfo.online,High,infrastructure/tls-analysis.md,Cert Spotter record identifier
+TLS-005,PUBLIC_KEY_SHA256,4319b47dce7fac5770cb1c605aafa2d6a8cdf51ce027bf8820833b72cca74654,host.kinginfo.online certificate public key,certificate_context,host.kinginfo.online,High,infrastructure/tls-analysis.md,First observed public-key fingerprint
+TLS-006,CERTIFICATE_ID,17970088057,host.kinginfo.online certificate record,certificate_context,host.kinginfo.online,High,infrastructure/tls-analysis.md,Cert Spotter record identifier
+TLS-007,PUBLIC_KEY_SHA256,81d0ade030edb4c739a49947d740a4abc419cad3cefd2f78765d1b5d555fd6ff,host.kinginfo.online certificate public key,certificate_context,host.kinginfo.online,High,infrastructure/tls-analysis.md,Second observed public-key fingerprint
+IP-001,IPV4,104.21.3.189,Cloudflare edge address,shared_cdn_context,Primary configured subdomains,High,infrastructure/dns-analysis.md,Not a verified origin IP
+IP-002,IPV4,172.67.131.27,Cloudflare edge address,shared_cdn_context,Primary configured subdomains,High,infrastructure/dns-analysis.md,Not a verified origin IP
+IP-003,IPV6,2606:4700:3031::6815:3bd,Cloudflare edge address,shared_cdn_context,Primary configured subdomains,High,infrastructure/dns-analysis.md,Not a verified origin IP
+IP-004,IPV6,2606:4700:3037::ac43:831b,Cloudflare edge address,shared_cdn_context,Primary configured subdomains,High,infrastructure/dns-analysis.md,Not a verified origin IP

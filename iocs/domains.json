@@ -1,0 +1,245 @@
+{
+  "schema_version": "1.0",
+  "investigation": "Android APK and C2 Infrastructure Investigation",
+  "classification": "Suspicious application-associated infrastructure",
+  "attribution": "Undetermined",
+  "domains": [
+    {
+      "id": "DOMAIN-001",
+      "value": "kinginfo.online",
+      "role": "primary_configured_infrastructure",
+      "classification": "configured_infrastructure",
+      "confidence": "high",
+      "evidence_source": "server.json",
+      "description": "Primary domain referenced by the application's remote service configuration."
+    },
+    {
+      "id": "DOMAIN-002",
+      "value": "w60.kinginfo.online",
+      "role": "application_service_host",
+      "classification": "configured_infrastructure",
+      "confidence": "high",
+      "evidence_source": "server.json",
+      "description": "Hostname used by multiple configured application service endpoints."
+    },
+    {
+      "id": "DOMAIN-003",
+      "value": "host.kinginfo.online",
+      "role": "configuration_service_host",
+      "classification": "configured_infrastructure",
+      "confidence": "high",
+      "evidence_source": "web_server.json",
+      "description": "Hostname referenced by the application's web configuration endpoint."
+    },
+    {
+      "id": "DOMAIN-004",
+      "value": "mrkinginfoback.online",
+      "role": "secondary_configured_domain",
+      "classification": "configured_infrastructure",
+      "confidence": "high",
+      "evidence_source": "server.json",
+      "description": "Secondary domain referenced by the call-forwarding update configuration."
+    },
+    {
+      "id": "DOMAIN-005",
+      "value": "w60.mrkinginfoback.online",
+      "role": "call_forwarding_update_host",
+      "classification": "configured_infrastructure",
+      "confidence": "high",
+      "evidence_source": "server.json",
+      "description": "Hostname configured for call-forwarding status updates. DNS resolution failed during the recorded endpoint assessment."
+    }
+  ],
+  "urls": [
+    {
+      "id": "URL-001",
+      "value": "https://w60.kinginfo.online/background_service.php",
+      "role": "device_status_reporting",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-002",
+      "value": "https://w60.kinginfo.online/sms_forward.php",
+      "role": "sms_forwarding",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-003",
+      "value": "https://w60.kinginfo.online/sms_forward_number.php",
+      "role": "sms_forwarding_configuration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-004",
+      "value": "https://w60.kinginfo.online/call_forward.php",
+      "role": "call_forwarding_operation",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-005",
+      "value": "https://w60.kinginfo.online/call_forward_setting.php",
+      "role": "call_forwarding_configuration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-006",
+      "value": "https://w60.kinginfo.online/sms_send.php",
+      "role": "remote_sms_transmission",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-007",
+      "value": "https://w60.kinginfo.online/app_upload.php",
+      "role": "application_upload_configuration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-008",
+      "value": "https://w60.kinginfo.online/permission.php",
+      "role": "permission_configuration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-009",
+      "value": "https://w60.kinginfo.online/save_token.php",
+      "role": "fcm_token_registration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-010",
+      "value": "https://w60.kinginfo.online/web/api/check_online.php",
+      "role": "online_status_check",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-011",
+      "value": "https://w60.kinginfo.online/ussd_setting.php",
+      "role": "ussd_configuration",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-012",
+      "value": "https://w60.kinginfo.online/update_ussd.php",
+      "role": "ussd_status_reporting",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-013",
+      "value": "https://w60.mrkinginfoback.online/update_call_forward.php",
+      "role": "call_forwarding_status_update",
+      "evidence_source": "server.json"
+    },
+    {
+      "id": "URL-014",
+      "value": "https://host.kinginfo.online/get.php",
+      "role": "web_configuration_retrieval",
+      "evidence_source": "web_server.json"
+    }
+  ],
+  "firebase": [
+    {
+      "id": "FIREBASE-001",
+      "type": "firebase_project_id",
+      "value": "fcmtoken-af5a6",
+      "role": "application_fcm_configuration",
+      "confidence": "high",
+      "evidence_source": "recovered_firebase_configuration"
+    },
+    {
+      "id": "FIREBASE-002",
+      "type": "firebase_sender_id",
+      "value": "705898731",
+      "role": "application_fcm_configuration",
+      "confidence": "high",
+      "evidence_source": "recovered_firebase_configuration"
+    },
+    {
+      "id": "FIREBASE-003",
+      "type": "firebase_app_id",
+      "value": "1:705898731153:web:130e5565c49b143bfb9130",
+      "role": "application_fcm_configuration",
+      "confidence": "high",
+      "evidence_source": "recovered_firebase_configuration"
+    }
+  ],
+  "dns_observations": {
+    "observed_at": "2026-11-03T14:49:33Z",
+    "cloudflare_associated_addresses": [
+      {
+        "record_type": "A",
+        "value": "104.21.3.189",
+        "classification": "shared_cdn_edge_context"
+      },
+      {
+        "record_type": "A",
+        "value": "172.67.131.27",
+        "classification": "shared_cdn_edge_context"
+      },
+      {
+        "record_type": "AAAA",
+        "value": "2606:4700:3031::6815:3bd",
+        "classification": "shared_cdn_edge_context"
+      },
+      {
+        "record_type": "AAAA",
+        "value": "2606:4700:3037::ac43:831b",
+        "classification": "shared_cdn_edge_context"
+      }
+    ],
+    "secondary_hostname_observation": {
+      "hostname": "w60.mrkinginfoback.online",
+      "result": "NXDOMAIN",
+      "meaning": "DNS resolution failed during the recorded assessment."
+    },
+    "notes": [
+      "The listed IP addresses are Cloudflare-associated edge addresses.",
+      "They are not verified origin-server addresses.",
+      "Shared CDN addresses should not be treated as exclusive indicators of the application operator."
+    ]
+  },
+  "certificate_observations": [
+    {
+      "id": "TLS-001",
+      "hostname": "w60.kinginfo.online",
+      "certificate_id": "17436230060",
+      "issuer": "Let's Encrypt YR2",
+      "certificate_sha256": "63d72c5c9a96756ef7d88f6c2965d2b6962ab744dbae983159eafb1808b39321",
+      "public_key_sha256": "78439e520243b864cc5e082ed503d61fdbdbf67358b764c1f505e538d441a3ca",
+      "issued_at": "2026-09-27T02:07:17Z",
+      "expires_at": "2026-12-26T02:07:16Z",
+      "revoked": false
+    },
+    {
+      "id": "TLS-002",
+      "hostname": "host.kinginfo.online",
+      "certificate_id": "16807392801",
+      "issuer": "Let's Encrypt YR2",
+      "public_key_sha256": "4319b47dce7fac5770cb1c605aafa2d6a8cdf51ce027bf8820833b72cca74654",
+      "issued_at": "2026-08-27",
+      "expires_at": "2026-11-25"
+    },
+    {
+      "id": "TLS-003",
+      "hostname": "host.kinginfo.online",
+      "certificate_id": "17970088057",
+      "issuer": "Let's Encrypt YR2",
+      "public_key_sha256": "81d0ade030edb4c739a49947d740a4abc419cad3cefd2f78765d1b5d555fd6ff",
+      "issued_at": "2026-10-25",
+      "expires_at": "2027-01-23"
+    }
+  ],
+  "endpoint_assessment": {
+    "observed_at": "2026-11-04T13:02:38Z",
+    "http_200_count": 12,
+    "dns_resolution_error_count": 1,
+    "interpretation": "HTTP 200 responses indicate protocol-level responses, not successful application operations or server-side data storage."
+  },
+  "handling_notes": [
+    "Domains and URLs are associated with the examined application's configuration; ownership and operator attribution are undetermined.",
+    "Do not classify shared Cloudflare edge addresses as confirmed malicious origin IPs.",
+    "Do not publish the telephone number returned by sms_forward_number.php.",
+    "The returned forwarding status was off; this does not prove all forwarding functionality was disabled.",
+    "No successful victim-device communication or server-side data storage was established.",
+    "Validate indicators independently before deploying blocking or detection rules."
+  ]
+}
