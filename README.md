@@ -281,6 +281,8 @@ The investigation followed a static-analysis and passive-intelligence approach. 
 
 ## Repository Structure
 
+The repository is organised into dedicated directories for investigation reports, technical analysis, infrastructure intelligence, evidence management, indicators of compromise, visual diagrams, and supporting Python utilities.
+
 ```text
 hdfc-android-apk-investigation/
 │
@@ -296,6 +298,17 @@ hdfc-android-apk-investigation/
 │   ├── sms-analysis.md
 │   └── ussd-analysis.md
 │
+├── diagrams/
+│   ├── investigation-workflow.md
+│   ├── application-architecture.md
+│   ├── sms-forwarding-flow.md
+│   ├── fcm-command-flow.md
+│   ├── call-forwarding-flow.md
+│   ├── ussd-command-flow.md
+│   ├── c2-infrastructure-map.md
+│   ├── evidence-lifecycle.md
+│   └── certificate-timeline.md
+│
 ├── docs/
 │   ├── executive-summary.md
 │   ├── findings.md
@@ -303,8 +316,6 @@ hdfc-android-apk-investigation/
 │   ├── limitations.md
 │   ├── methodology.md
 │   └── timeline.md
-│
-├── diagrams/
 │
 ├── evidence/
 │   ├── chain-of-custody.md
@@ -324,14 +335,42 @@ hdfc-android-apk-investigation/
 │   └── indicators.md
 │
 ├── reports/
-│   ├── c2-infrastructure-report.md
 │   ├── final-investigation-report.md
 │   └── static-analysis-report.md
 │
 └── scripts/
     ├── README.md
-    └── requirements.txt
+    ├── requirements.txt
+    ├── sha256_manifest.py
+    ├── apk_metadata.py
+    ├── validate_iocs.py
+    ├── dns_analysis.py
+    └── certificate_analysis.py
 ```
+
+### Directory Description
+
+| Directory | Description |
+|---|---|
+| `analysis/` | Detailed static examination of APK components, permissions, SMS, FCM, USSD, call forwarding, persistence, and anti-analysis mechanisms. |
+| `diagrams/` | Mermaid diagrams illustrating application architecture, communication workflows, infrastructure relationships, and evidence handling. |
+| `docs/` | Investigation scope, methodology, timeline, executive summary, findings, and limitations. |
+| `evidence/` | Evidence inventory and chain-of-custody documentation. |
+| `infrastructure/` | DNS, domain, Firebase, TLS, and endpoint intelligence observations. |
+| `iocs/` | Structured indicators of compromise in Markdown, JSON, and CSV formats. |
+| `reports/` | Consolidated technical investigation reports. |
+| `scripts/` | Python utilities for evidence hashing, APK metadata inspection, IOC validation, DNS analysis, and certificate analysis. |
+
+### Navigation
+
+- **Investigation overview:** Start with the root `README.md`.
+- **Technical findings:** Explore `analysis/`.
+- **Infrastructure intelligence:** Explore `infrastructure/`.
+- **Evidence management:** Explore `evidence/`.
+- **Indicators of compromise:** Explore `iocs/`.
+- **Visual workflows:** Explore `diagrams/`.
+- **Detailed reports:** Explore `reports/`.
+- **Reproducibility utilities:** Explore `scripts/` and its README.
 
 ---
 
