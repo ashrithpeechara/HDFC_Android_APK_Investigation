@@ -1,6 +1,7 @@
+<p align="center">
 # HDFC Android APK Investigation
 
-<p align="center">
+
   <strong>Android Malware Analysis | Digital Forensics | C2 Infrastructure Intelligence</strong>
 </p>
 
